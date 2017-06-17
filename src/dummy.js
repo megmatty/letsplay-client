@@ -1,24 +1,26 @@
 export const friends = [
-	{"name": "Max Power",
-		"avatar": "avatar.png"
+	{"name": "maxpower",
+		"avatar": "http://www.radfaces.com/images/avatars/little-pete-wrigley.jpg"
 	},
-	{"name": "Lisa Simpson",
-		"avatar": "avatar.png"
+	{"name": "lisasimpson",
+		"avatar": "http://www.radfaces.com/images/avatars/aeon-flux.jpg"
 	},
-	{"name": "Hans Moleman",
-		"avatar": "avatar.png"
+	{"name": "HansMoleman",
+		"avatar": "http://www.radfaces.com/images/avatars/artie-strongman.jpg"
 	},
-	{"name": "Hugh Jass",
-		"avatar": "avatar.png"
+	{"name": "hughJass",
+		"avatar": "http://www.radfaces.com/images/avatars/bradley-taylor.jpg"
 	},
-	{"name": "Carl Carlson",
-		"avatar": "avatar.png"
+	{"name": "carlCcarlson",
+		"avatar": "http://www.radfaces.com/images/avatars/lawrence-cohen.jpg"
 	}
 ];
 
 export const game = {
-    "title": "The Legend of Zelda",
-    "year": 1991,
-    "rating": "4/5",
-    "description": "Edison bulb asymmetrical flexitarian blue bottle. Mustache af bushwick austin schlitz scenester, tbh letterpress williamsburg kogi shaman pok pok. Ennui master cleanse mlkshk literally."
- };
+  "title": "The Legend of Zelda",
+  "year": 1991,
+  "rating": "4/5",
+  "description": "Edison bulb asymmetrical flexitarian blue bottle. Mustache af bushwick austin schlitz scenester, tbh letterpress williamsburg kogi shaman pok pok. Ennui master cleanse mlkshk literally."
+};
+
+export const listNames = ["What I'm Playing", "Want to Play", "All-Time Faves"];
