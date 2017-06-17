@@ -21,7 +21,7 @@ export const listNames = ["What I'm Playing", "Want to Play", "All-Time Faves"];
 //User Lists
 export const WIP = [
 	{
-		"title": "Game 1 WIP List",
+		"title": "Game 1 WIP List yo",
   	"year": 1991,
   	"rating": "4/5",
   	"description": "Edison bulb asymmetrical flexitarian blue bottle. Mustache af bushwick austin schlitz scenester, tbh letterpress williamsburg kogi shaman pok pok. Ennui master cleanse mlkshk literally."
@@ -38,7 +38,7 @@ export const WTP = [
 		"title": "Game 1 WTP List",
   	"year": 1991,
   	"rating": "4/5",
-  	"description": "Edison bulb asymmetrical flexitarian blue bottle. Mustache af bushwick austin schlitz scenester, tbh letterpress williamsburg kogi shaman pok pok. Ennui master cleanse mlkshk literally."
+  	"description": "sup Edison bulb asymmetrical flexitarian blue bottle. Mustache af bushwick austin schlitz scenester, tbh letterpress williamsburg kogi shaman pok pok. Ennui master cleanse mlkshk literally."
 	},
 	{
 		"title": "Game 2 WTP List",
@@ -55,7 +55,7 @@ export const ATF = [
   	"description": "Edison bulb asymmetrical flexitarian blue bottle. Mustache af bushwick austin schlitz scenester, tbh letterpress williamsburg kogi shaman pok pok. Ennui master cleanse mlkshk literally."
 	},
 	{
-		"title": "Game 2 ATF List",
+		"title": "Game 2 ATF List cool",
   	"year": 1991,
   	"rating": "4/5",
   	"description": "Edison bulb asymmetrical flexitarian blue bottle. Mustache af bushwick austin schlitz scenester, tbh letterpress williamsburg kogi shaman pok pok. Ennui master cleanse mlkshk literally."

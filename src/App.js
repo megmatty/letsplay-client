@@ -11,6 +11,15 @@ import './App.css';
 import {friends, userLists, listNames, WIP, WTP, ATF} from './dummy';
 import Moment from 'react-moment';
 
+
+//import React from 'react'
+//import ReactDOM from 'react-dom'
+
+import SearchInput, {createFilter} from 'react-search-input'
+
+
+import emails from './mails'
+
 //Stuff to do 
   //Fetch API is working for now but think it's only mapping a single game result in the Game component. The Lists will need to populate maybe by storing list info in DB then making an API call for all those items? Not sure...data structure needs to be worked out
   //Needs alternate Nav that switches on login
@@ -324,6 +333,78 @@ class Container extends Component {
   }
 }
 
+
+
+/*
+ *         {filteredEmails.map(email => {
+          return (
+            <div className='mail' key={email.id}>
+              <div className='from'>{email.user.name}</div>
+              <div className='subject'>{email.subject}</div>
+            </div>
+          )
+        })}
+
+import {friends, userLists, listNames, WIP, WTP, ATF} from './dummy';
+		
+*/
+
+const KEYS_TO_FILTERS = ['user.name', 'subject', 'dest.name', 'id']
+const KEYS = ['name', 'title', 'description', 'year']
+
+const Search = React.createClass({
+  getInitialState () {
+    return { searchTerm: '' }
+  },
+
+  render () {
+    //const filteredEmails = emails.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS))
+    const filteredWIP = WIP.filter(createFilter(this.state.searchTerm, KEYS))
+    const filteredWTP = WTP.filter(createFilter(this.state.searchTerm, KEYS))
+    const filteredATF = ATF.filter(createFilter(this.state.searchTerm, KEYS))
+
+	
+    const filterdFreinds = friends.filter(createFilter(this.state.searchTerm, KEYS)) 
+    return (
+      <div>
+        <SearchInput className='search-input' onChange={this.searchUpdated} />
+
+
+	{filterdFreinds.map(friend=>{
+		return ( <div key={friend.name} className="friend">{friend.name}</div> ) 
+				     
+		})		
+	}
+	{filteredWTP.map(w=>{
+		return ( <div key={w.title} className="friend">{w.title} <br/> {w.description}</div> ) 
+				     
+		})		
+	}
+
+	{filteredWIP.map(w=>{
+		return ( <div key={w.title} className="friend">{w.title} <br/> {w.description}</div> ) 
+				     
+		})		
+	}
+	{filteredATF.map(w=>{
+		return ( <div key={w.title} className="friend">{w.title} <br/> {w.description}</div> ) 
+				     
+		})		
+	}
+
+
+      </div>
+    )
+  },
+
+  searchUpdated (term) {
+    this.setState({searchTerm: term})
+  }
+})
+
+//ReactDOM.render(<App />, document.getElementById('app'))
+
+
 //Render Whole Thing in App
 class App extends Component {
   render() {
@@ -332,6 +413,8 @@ class App extends Component {
         <div className="App">
           <Header />
           <Container lists={listNames} friends={friends}/>
+	  <Search />
+	  
         </div>
       </Router>
     );
