@@ -8,11 +8,11 @@ import {
 } from 'react-router-dom';
 import 'normalize.css';
 import './App.css';
-import {friends, game, listNames} from './dummy';
+import {friends, userLists, listNames, WIP, WTP, ATF} from './dummy';
 import Moment from 'react-moment';
 
 //Stuff to do 
-  //Fetch API is working for now but think it's on the wrong component...need to get mapped array of search results into a List component and keep Game component for a single item
+  //Fetch API is working for now but think it's only mapping a single game result in the Game component. The Lists will need to populate maybe by storing list info in DB then making an API call for all those items? Not sure...data structure needs to be worked out
   //Needs alternate Nav that switches on login
     //Needs Search box and Nav links to Profile/Lists/Contact
   //Add friend to friends array on Add button (state needed for Friends components)
@@ -21,8 +21,10 @@ import Moment from 'react-moment';
     //https://www.npmjs.com/package/read-more-react??
   //Clicking game title right now goes to generic game instead of correct item from game list
   //Needs some kind of Switch routing to display correct lists
-    //Correct items need to be stored in separate list arrays
+    //Got one dummy data list working but can't figure out how to switch based on click and data may not be set up right
   //Clicking contact next to friend name should pull friend name into contact form
+  //Some links (e.g. button bar) will eventually be onclick functions that add items and then redirect
+  //CSS for other media queries
 
 //Header & Nav Bar
 class Header extends Component {
@@ -72,7 +74,7 @@ class Profile extends Component {
     return (
       <div className="content-container">      
         <User user="Jane Doe"/>
-        <ProfileList lists={listNames}/>
+        <ProfileList listNames={listNames}/>
         <FriendList friends={friends}/>
       </div>
     );
@@ -102,10 +104,12 @@ class ProfileList extends Component {
     return (
       <div className="profile-lists-container">
         <Link to="/lists"><h3>My Lists</h3></Link>
-        {this.props.lists.map((list, i) => {
+        {this.props.listNames.map((list, i) => {
           return <div className="profile-list" key={i}>
-                    <img className="arrow-icon" src="arrow.png" />
-                    <p className="list-name" >{list}</p>
+                    <Link to={`/lists/${list}`}>
+                      <img className="arrow-icon" src="arrow.png" />
+                    </Link>
+                    <p className="list-name">{list}</p>
                  </div>;
         })}
       </div>
@@ -146,10 +150,7 @@ class FriendMatch extends Component {
               <p>{friend.name}</p>
               <p>plays this game</p>
               <Link to="/profile">
-                <span className="add-friend">
-                  <img className="add-icon" src="add.png"/>
-                  <span>Add</span>
-                </span>
+                <img className="add-icon" src="add.png"/>
               </Link>
             </div>
           )}
@@ -160,7 +161,7 @@ class FriendMatch extends Component {
   }
 }
 
-//Contact Friends View
+//Contact Friends Form View
 class ContactFriend extends Component {
   render() {
     return (
@@ -203,25 +204,42 @@ class MyLists extends Component {
       <div className="content-container">
         <User user="janedoe"/>
         <h3>My Lists</h3>
-          <div className="list-button-bar">
-          {listNames.map((list, i) => {
-            return <div className="list-button" key={i}>
-                      <Link to={`/lists/${list}`}>{list}</Link>
-                   </div>;
-          })}
-          </div>
-        <List />
+        <ListButtonBar />
+        <List list={WIP}/>
       </div>
     );
   }
 }
 
-//Single List View 
+//Lists Button Bar
+class ListButtonBar extends Component {
+  render() {
+    return (
+      <div className="list-button-bar">
+          {listNames.map((list, i) => {
+            return <div className="list-button" key={i}>
+                      <Link to={`/lists/${list}`}>{list}</Link>
+                   </div>;
+          })}
+      </div>
+    );
+  }
+}
+
+//Single Game List View 
 class List extends Component {
   render() {
     return (
       <div className="list-container">
-        <Game game={game}/>
+        {this.props.list.map((item, i) => {
+          return <div className="game-detail" key={i}>
+                  <p>{item.title}</p>
+                  <p>{item.year}</p>
+                  <p>{item.rating}</p>
+                  <p>{item.description}</p>
+                 </div>;
+          })}
+        <Game /> {/*put here so we can see working API in List*/}
       </div>
     );
   }
@@ -233,22 +251,16 @@ class GameDisplay extends Component {
   render() {
     return (
       <div className="game-container">
-        <Game game={game}/>
-        <div className="list-button-bar">
-          <p className="add-list">Add Game to List</p>
-          {listNames.map((list, i) => {
-            return <div className="list-button" key={i}>
-                      <Link to={`/lists/${list}`}>{list}</Link>
-                   </div>;
-          })}
-        </div>
+        <Game />
+        <p className="add-list">Add Game to List</p>
+        <ListButtonBar />
         <FriendMatch friends={friends}/>
       </div>
     );
   }
 }
 
-//Single Game Info View
+//Single Game Info View - current holds test Fetch but this isn't right
 class Game extends Component {
 
   constructor(props) {
@@ -285,7 +297,7 @@ class Game extends Component {
               <img className="box-art" src={'//images.igdb.com/igdb/image/upload/t_cover_big/'+ game.cover.cloudinary_id + '.jpg'} alt='gamebox art' />
               <p>Year: <Moment format="YYYY">{game.first_release_date}</Moment></p>
               <p>Rating: {Math.floor(game.rating)}/100</p>
-              <p className='summary'>{game.storyline ? game.storyline.substring(0,100) + '...' : game.summary.substring(0,100) + '...' || 'This game has no summary'}</p>
+              <p className='summary'>{game.storyline ? game.storyline : game.summary || 'This game has no summary'}</p>
             </div>
           )}
         </div>); 
@@ -304,11 +316,7 @@ class Container extends Component {
       <div className="main-container">
         <Route exact path='/' component={Landing}/>
         <Route exact path='/profile' component={Profile}/>
-        <Route path='/lists' component={MyLists}/>
-        {/*Needs better implementation...Switch?*/}
-          {/*<Route exact path={`/lists/${listNames[0]}`} component={WIP}/>
-          <Route exact path={`/lists/${listNames[1]}`} component={WTP}/>
-          <Route exact path={`/lists/${listNames[2]}`}component={ATF}/>*/}
+        <Route path='/lists' component={MyLists} />
         <Route exact path='/game' component={GameDisplay}/>
         <Route exact path='/friends' component={ContactFriend}/>
       </div>

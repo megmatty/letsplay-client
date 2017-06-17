@@ -2,11 +2,6 @@
   box-sizing: border-box;
 }
 
-html {
-  min-height: 100%;
-  position: relative;
-}
-
 .header {
   display: flex;
   justify-content: space-between;
@@ -26,6 +21,8 @@ html {
 .container {
   margin: 55px 0 0;
   height: 100%;
+  position: relative;
+  padding-bottom: 20px; /*height of footer*/
 }
 
 .content-container {
@@ -52,11 +49,11 @@ html {
 footer {
   text-align: center;
   font-size: 0.8em;
-  min-height: 30px;
+  height: 20px;
   width: 100%;
   position: absolute;
   bottom: 0;
-  /*figure out footer positioning*/
+  background-color: #ddd;
 }
 
 .profile-container {
@@ -102,6 +99,7 @@ footer {
 
 .add-icon {
   width: 20px;
+  cursor: pointer;
 }
 
 .env-icon {
