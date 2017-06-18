@@ -208,13 +208,32 @@ class ContactFriend extends Component {
 
 //My Lists View
 class MyLists extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      list: WTP,
+    };
+    this.changeList = this.changeList.bind(this);
+  }
+
+  changeList(list) {
+    if (list='All-Time Favorites') {
+      list=ATF;
+    }
+    console.log(list);
+    console.log(this.state);
+    this.setState({
+      list: list
+    });
+  }
+
   render() {
     return (
       <div className="content-container">
         <User user="janedoe"/>
         <h3>My Lists</h3>
-        <ListButtonBar />
-        <List list={WIP}/>
+        <ListButtonBar thing={this.changeList}/>
+        <List list={this.state.list}/>
       </div>
     );
   }
@@ -222,11 +241,12 @@ class MyLists extends Component {
 
 //Lists Button Bar
 class ListButtonBar extends Component {
+
   render() {
     return (
       <div className="list-button-bar">
           {listNames.map((list, i) => {
-            return <div className="list-button" key={i}>
+            return <div className="list-button" key={i} onClick={()=>{this.props.thing(list)}}>
                       <Link to={`/lists/${list}`}>{list}</Link>
                    </div>;
           })}
@@ -268,6 +288,7 @@ class GameDisplay extends Component {
     );
   }
 }
+
 
 //Single Game Info View - current holds test Fetch but this isn't right
 class Game extends Component {
@@ -357,48 +378,61 @@ const Search = React.createClass({
     return { searchTerm: '' }
   },
 
-  render () {
-    //const filteredEmails = emails.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS))
-    const filteredWIP = WIP.filter(createFilter(this.state.searchTerm, KEYS))
-    const filteredWTP = WTP.filter(createFilter(this.state.searchTerm, KEYS))
-    const filteredATF = ATF.filter(createFilter(this.state.searchTerm, KEYS))
+  componentDidMount() {
+   const request = new Request("https://igdbcom-internet-game-database-v1.p.mashape.com/games/?fields=name&limit=50&offset=0&order=release_dates.date%3Adesc&search=", {
+        headers: new Headers({
+          'X-Mashape-Key': 'EUQMsXMjGmmshSjK8dQ9W31H8UOtp1wKG3bjsnwgRTlndgTXjR'
+        })
+      });
 
-	
-    const filterdFreinds = friends.filter(createFilter(this.state.searchTerm, KEYS)) 
-    return (
-      <div>
-        <SearchInput className='search-input' onChange={this.searchUpdated} />
+      fetch(request)
+        .then(response => response.json())
+        .then(json => this.setState({
+          data: json
+      }))
+  },
 
+  searchAPI(query) {
+   const request = new Request(`https://igdbcom-internet-game-database-v1.p.mashape.com/games/?fields=name&limit=50&offset=0&order=release_dates.date%3Adesc&search=${query}`, {
+        headers: new Headers({
+          'X-Mashape-Key': 'EUQMsXMjGmmshSjK8dQ9W31H8UOtp1wKG3bjsnwgRTlndgTXjR'
+        })
+      });
 
-	{filterdFreinds.map(friend=>{
-		return ( <div key={friend.name} className="friend">{friend.name}</div> ) 
-				     
-		})		
-	}
-	{filteredWTP.map(w=>{
-		return ( <div key={w.title} className="friend">{w.title} <br/> {w.description}</div> ) 
-				     
-		})		
-	}
-
-	{filteredWIP.map(w=>{
-		return ( <div key={w.title} className="friend">{w.title} <br/> {w.description}</div> ) 
-				     
-		})		
-	}
-	{filteredATF.map(w=>{
-		return ( <div key={w.title} className="friend">{w.title} <br/> {w.description}</div> ) 
-				     
-		})		
-	}
+      fetch(request)
+        .then(response => response.json())
+        .then(json => this.setState({
+          data: json
+      }))
+  },
 
 
-      </div>
-    )
+
+  render() {
+    console.log(this.state.data);
+    if (this.state.data) {
+      const results = this.state.data.filter(createFilter(this.state.searchTerm, KEYS));
+      return(
+        <div>
+          <SearchInput className='search-input' onChange={this.searchUpdated} />
+          <button onClick={()=>{this.searchAPI(this.state.searchTerm)}}>Go</button>
+          {results.map(item => {
+            return ( <div key={item.id}>{item.name}</div> ) 
+            })    
+          }
+        </div>
+      );
+  } else {
+      return (
+        <div>Loading...</div>
+      );
+  }
+
   },
 
   searchUpdated (term) {
-    this.setState({searchTerm: term})
+    this.setState({searchTerm: term});
+   
   }
 })
 
