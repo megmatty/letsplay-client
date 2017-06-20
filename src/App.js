@@ -22,13 +22,12 @@ import SearchInput, {createFilter} from 'react-search-input'
   //Need "Read More" to shorten game descriptions...like maybe use:
     //https://www.npmjs.com/package/read-more-react??
   //Clicking game title right now goes to generic game instead of correct item from game list
-  //Needs some kind of Switch routing to display correct lists
-    //Got one dummy data list working but can't figure out how to switch based on click and data may not be set up right
   //Clicking contact next to friend name should pull friend name into contact form
   //Some links (e.g. button bar) will eventually be onclick functions that add items and then redirect
   //CSS for other media queries
 
 //Header & Nav Bar
+  //Needs nav switch on login
 class Header extends Component {
   render() {
     return (
@@ -42,7 +41,6 @@ class Header extends Component {
     );
   }
 }
-
 
 //Landing Page (static)
 class Landing extends Component {
@@ -84,7 +82,6 @@ class Profile extends Component {
   }
 }
 
-
 //User Profile Info
 class User extends Component {
   render() {
@@ -119,6 +116,84 @@ class ProfileList extends Component {
     );
   }
 }
+
+//My Lists View
+class MyLists extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      list: WIP,
+    };
+    this.changeList = this.changeList.bind(this);
+  }
+
+  changeList(list) {
+    console.log(list);
+    if (list === "All-Time Faves") {
+      this.setState({
+        list: ATF
+      });
+    } else if (list === "Want to Play") {
+      this.setState({
+        list: WTP
+      });
+    } else if (list === "What I'm Playing") {
+      this.setState({
+        list: WIP
+      });
+    };
+
+    console.log(this.state.list);
+  }
+
+  render() {
+    return (
+      <div className="content-container">
+        <User user="janedoe"/>
+        <h3>My Lists</h3>
+        <ListButtonBar handler={this.changeList}/>
+        <List list={this.state.list}/>
+      </div>
+    );
+  }
+}
+
+//Lists Button Bar
+class ListButtonBar extends Component {
+
+  render() {
+    return (
+      <div className="list-button-bar">
+          {listNames.map((list, i) => {
+            return <div className="list-button" key={i} onClick={()=>{this.props.handler(list)}}>
+                    <Link to={`/lists/${list}`}>{list}</Link>
+                   </div>;
+          })}
+      </div>
+    );
+  }
+}
+
+//List of Games View
+  //right now this is rendering the same as Game. Need Game to be dumb component to display all game data, then looped over with List. But not sure where how to pass state.
+class List extends Component {
+  render() {
+    return (
+      <div className="list-container">
+        {this.props.list.map((game, i) => {
+          return <div className="game-detail" key={i}>
+                  <Link to="/game"><p>{game.name}</p></Link>
+                  <img className="box-art" src={'//images.igdb.com/igdb/image/upload/t_cover_big/'+ game.cover.cloudinary_id + '.jpg'} alt='gamebox art' />
+                  <p>Year: <Moment format="YYYY">{game.first_release_date}</Moment></p>
+                  <p>Rating: {game.rating ? Math.floor(game.rating) + "/100" : "NR"}</p>
+                 </div>;
+          })}
+        <Game /> {/*put here so we can see working API in List*/}
+      </div>
+    );
+  }
+}
+
 
 //Friend List on Profile Page
 class FriendList extends Component {
@@ -200,85 +275,9 @@ class ContactFriend extends Component {
   }
 }
 
-//My Lists View
-class MyLists extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      list: WIP,
-    };
-    this.changeList = this.changeList.bind(this);
-  }
-
-  changeList(list) {
-    console.log(list);
-    if (list === "All-Time Faves") {
-      this.setState({
-        list: ATF
-      });
-    } else if (list === "Want to Play") {
-      this.setState({
-        list: WTP
-      });
-    } else if (list === "What I'm Playing") {
-      this.setState({
-        list: WIP
-      });
-    };
-
-    console.log(this.state.list);
-  }
-
-  render() {
-    return (
-      <div className="content-container">
-        <User user="janedoe"/>
-        <h3>My Lists</h3>
-        <ListButtonBar handler={this.changeList}/>
-        <List list={this.state.list}/>
-      </div>
-    );
-  }
-}
-
-//Lists Button Bar
-class ListButtonBar extends Component {
-
-  render() {
-    return (
-      <div className="list-button-bar">
-          {listNames.map((list, i) => {
-            return <div className="list-button" key={i} onClick={()=>{this.props.handler(list)}}>
-                    <Link to={`/lists/${list}`}>{list}</Link>
-                   </div>;
-          })}
-      </div>
-    );
-  }
-}
-
-//Single Game List View 
-class List extends Component {
-  render() {
-    return (
-      <div className="list-container">
-        {this.props.list.map((game, i) => {
-          return <div className="game-detail" key={i}>
-                  <Link to="/game"><p>{game.name}</p></Link>
-                  <img className="box-art" src={'//images.igdb.com/igdb/image/upload/t_cover_big/'+ game.cover.cloudinary_id + '.jpg'} alt='gamebox art' />
-                  <p>Year: <Moment format="YYYY">{game.first_release_date}</Moment></p>
-                  <p>Rating: {game.rating ? Math.floor(game.rating) + "/100" : "NR"}</p>
-                 </div>;
-          })}
-        <Game /> {/*put here so we can see working API in List*/}
-      </div>
-    );
-  }
-}
-
-
 //Game Display View
 class GameDisplay extends Component {
+
   render() {
     {/*Need to fix bug here...this.changelist is not a function...pass down from Container?*/}
     return (
@@ -292,8 +291,7 @@ class GameDisplay extends Component {
   }
 }
 
-
-//Single Game Info View - current holds test Fetch but this isn't right
+//Single Game Info View - current holds test Fetch but this isn't right. Needs probably to be a dumb render component that takes the game data from state/props
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -342,25 +340,7 @@ class Game extends Component {
   }
 }
 
-//Container for SPA Components by Route
-class Container extends Component {
-  
-
-
-  render() {
-    return (
-      <div className="main-container">
-        <Route exact path='/' component={Landing}/>
-        <Route exact path='/profile' component={Profile}/>
-        <Route path='/lists' component={MyLists} />
-        <Route exact path='/game' component={GameDisplay}/>
-        <Route exact path='/friends' component={ContactFriend}/>
-      </div>
-    );
-  }
-}
-
-//Search feature
+//Search Feature
 const KEYS = ['name', 'title', 'description', 'year']
 
 class Search extends Component {
@@ -423,7 +403,7 @@ class Search extends Component {
       return game.id === id;
     });
     this.findGame(id);
-  } //Needs to take id and search api again for single game then pass that data to Game component, then redirect to /game
+  } //Needs to take id and search api again for single game then pass that data to Game component, then redirect to /game with those props/state loaded
 
   render() {
     console.log(this.state.data);
@@ -450,6 +430,23 @@ class Search extends Component {
 
   }
 }
+
+//Container for SPA Components by Route
+class Container extends Component {
+  
+  render() {
+    return (
+      <div className="main-container">
+        <Route exact path='/' component={Landing}/>
+        <Route exact path='/profile' component={Profile}/>
+        <Route path='/lists' component={MyLists} />
+        <Route exact path='/game' component={GameDisplay}/>
+        <Route exact path='/friends' component={ContactFriend}/>
+      </div>
+    );
+  }
+}
+
 
 //Render Whole Thing in App
 class App extends Component {
