@@ -11,7 +11,7 @@ import './App.css';
 import {friends, userLists, listNames, WIP, WTP, ATF} from './dummy';
 import Moment from 'react-moment';
 
-import SearchInput, {createFilter} from 'react-search-input'
+import SearchInput, {createFilter} from 'react-search-input';
 
 //Stuff to do 
   //Fetch API is working for now but think it's only mapping a single game result in the Game component. The Lists will need to populate maybe by storing list info in DB then making an API call for all those items? Not sure...data structure needs to be worked out
@@ -88,7 +88,7 @@ class User extends Component {
     return (
       <div className="content-container">
         <div className="profile-container">
-          <img className="avatar" src="http://www.radfaces.com/images/avatars/jane-lane.jpg"/>
+          <img className="avatar" src="http://www.radfaces.com/images/avatars/jane-lane.jpg" alt="user avatar"/>
           <h2>{this.props.user}</h2>
           <h4>About Me</h4>
           <p> Gluten-free ethical wolf tote bag umami. 3 wolf moon organic man braid hexagon, next level chicharrones small batch prism tacos banjo blue bottle bushwick.</p>
@@ -107,7 +107,7 @@ class ProfileList extends Component {
         {this.props.listNames.map((list, i) => {
           return <div className="profile-list" key={i}>
                     <Link to={`/lists/${list}`}>
-                      <img className="arrow-icon" src="arrow.png" />
+                      <img className="arrow-icon" src="arrow.png" alt="arrow icon"/>
                     </Link>
                     <p className="list-name">{list}</p>
                  </div>;
@@ -183,7 +183,7 @@ class List extends Component {
         {this.props.list.map((game, i) => {
           return <div className="game-detail" key={i}>
                   <Link to="/game"><p>{game.name}</p></Link>
-                  <img className="box-art" src={'//images.igdb.com/igdb/image/upload/t_cover_big/'+ game.cover.cloudinary_id + '.jpg'} alt='gamebox art' />
+                  <img className="box-art" src={'//images.igdb.com/igdb/image/upload/t_cover_big/'+ game.cover.cloudinary_id + '.jpg'} alt="gamebox art" />
                   <p>Year: <Moment format="YYYY">{game.first_release_date}</Moment></p>
                   <p>Rating: {game.rating ? Math.floor(game.rating) + "/100" : "NR"}</p>
                  </div>;
@@ -204,9 +204,9 @@ class FriendList extends Component {
         <div className="friend-list">
           {this.props.friends.map((friend,i) =>
             <div className="friend" key={i}>
-              <img className="friend-avatar" src={friend.avatar} />
+              <img className="friend-avatar" src={friend.avatar} alt="friend avatar"/>
               <p>{friend.name}</p>
-              <Link to='/friends'><img className="env-icon" src="envelope.png" /></Link>
+              <Link to='/friends'><img className="env-icon" src="envelope.png" alt="send icon"/></Link>
             </div>
           )}
         </div>
@@ -224,11 +224,11 @@ class FriendMatch extends Component {
         <div className="friend-list">
           {this.props.friends.map((friend,i) =>
             <div className="friend" key={i}>
-              <img className="friend-avatar" src={friend.avatar}/>
+              <img className="friend-avatar" src={friend.avatar} alt="friend avatar"/>
               <p>{friend.name}</p>
               <p>plays this game</p>
               <Link to="/profile">
-                <img className="add-icon" src="add.png"/>
+                <img className="add-icon" src="add.png" alt="add icon"/>
               </Link>
             </div>
           )}
@@ -275,7 +275,7 @@ class ContactFriend extends Component {
   }
 }
 
-//Game Display View
+//Game Display View - for search result or clicked on single games
 class GameDisplay extends Component {
 
   render() {
@@ -341,11 +341,11 @@ class Game extends Component {
 }
 
 //Search Feature
-const KEYS = ['name', 'title', 'description', 'year']
+const KEYS = ['name']
 
 class Search extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = { searchTerm: '' };
     this.searchUpdated =this.searchUpdated.bind(this);
@@ -411,7 +411,7 @@ class Search extends Component {
       const results = this.state.data.filter(createFilter(this.state.searchTerm, KEYS));
       return(
         <div className="search-bar">
-          <SearchInput className='search-input' onChange={this.searchUpdated} />
+          <SearchInput className='search-input' onChange={this.searchUpdated} placeholder="Search by Game Title"/>
           <button className="search-button" onClick={()=>{this.searchAPI(this.state.searchTerm)}}>Go</button>
           <div className="search-results">
           {results.map(item => {

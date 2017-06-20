@@ -201,6 +201,7 @@ textarea {
   border-top: none;
   cursor: pointer;
   width: 100%;
+  z-index: 99;
 }
 
 .search-bar {
