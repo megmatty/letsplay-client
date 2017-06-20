@@ -11,14 +11,7 @@ import './App.css';
 import {friends, userLists, listNames, WIP, WTP, ATF} from './dummy';
 import Moment from 'react-moment';
 
-
-//import React from 'react'
-//import ReactDOM from 'react-dom'
-
 import SearchInput, {createFilter} from 'react-search-input'
-
-
-import emails from './mails'
 
 //Stuff to do 
   //Fetch API is working for now but think it's only mapping a single game result in the Game component. The Lists will need to populate maybe by storing list info in DB then making an API call for all those items? Not sure...data structure needs to be worked out
@@ -49,6 +42,7 @@ class Header extends Component {
     );
   }
 }
+
 
 //Landing Page (static)
 class Landing extends Component {
@@ -211,20 +205,28 @@ class MyLists extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: WTP,
+      list: WIP,
     };
     this.changeList = this.changeList.bind(this);
   }
 
   changeList(list) {
-    if (list='All-Time Favorites') {
-      list=ATF;
-    }
     console.log(list);
-    console.log(this.state);
-    this.setState({
-      list: list
-    });
+    if (list === "All-Time Faves") {
+      this.setState({
+        list: ATF
+      });
+    } else if (list === "Want to Play") {
+      this.setState({
+        list: WTP
+      });
+    } else if (list === "What I'm Playing") {
+      this.setState({
+        list: WIP
+      });
+    };
+
+    console.log(this.state.list);
   }
 
   render() {
@@ -232,7 +234,7 @@ class MyLists extends Component {
       <div className="content-container">
         <User user="janedoe"/>
         <h3>My Lists</h3>
-        <ListButtonBar thing={this.changeList}/>
+        <ListButtonBar handler={this.changeList}/>
         <List list={this.state.list}/>
       </div>
     );
@@ -246,8 +248,8 @@ class ListButtonBar extends Component {
     return (
       <div className="list-button-bar">
           {listNames.map((list, i) => {
-            return <div className="list-button" key={i} onClick={()=>{this.props.thing(list)}}>
-                      <Link to={`/lists/${list}`}>{list}</Link>
+            return <div className="list-button" key={i} onClick={()=>{this.props.handler(list)}}>
+                    <Link to={`/lists/${list}`}>{list}</Link>
                    </div>;
           })}
       </div>
@@ -260,12 +262,12 @@ class List extends Component {
   render() {
     return (
       <div className="list-container">
-        {this.props.list.map((item, i) => {
+        {this.props.list.map((game, i) => {
           return <div className="game-detail" key={i}>
-                  <p>{item.title}</p>
-                  <p>{item.year}</p>
-                  <p>{item.rating}</p>
-                  <p>{item.description}</p>
+                  <Link to="/game"><p>{game.name}</p></Link>
+                  <img className="box-art" src={'//images.igdb.com/igdb/image/upload/t_cover_big/'+ game.cover.cloudinary_id + '.jpg'} alt='gamebox art' />
+                  <p>Year: <Moment format="YYYY">{game.first_release_date}</Moment></p>
+                  <p>Rating: {game.rating ? Math.floor(game.rating) + "/100" : "NR"}</p>
                  </div>;
           })}
         <Game /> {/*put here so we can see working API in List*/}
@@ -278,11 +280,12 @@ class List extends Component {
 //Game Display View
 class GameDisplay extends Component {
   render() {
+    {/*Need to fix bug here...this.changelist is not a function...pass down from Container?*/}
     return (
       <div className="game-container">
         <Game />
         <p className="add-list">Add Game to List</p>
-        <ListButtonBar />
+        <ListButtonBar handler={this.changeList}/>
         <FriendMatch friends={friends}/>
       </div>
     );
@@ -292,7 +295,6 @@ class GameDisplay extends Component {
 
 //Single Game Info View - current holds test Fetch but this isn't right
 class Game extends Component {
-
   constructor(props) {
     super(props);
 
@@ -311,7 +313,8 @@ class Game extends Component {
 
       fetch(request)
         .then(response => response.json())
-        .then(json => this.setState({
+        .then(json => 
+      this.setState({
           data: json,
           loading: false
       }))
@@ -341,6 +344,9 @@ class Game extends Component {
 
 //Container for SPA Components by Route
 class Container extends Component {
+  
+
+
   render() {
     return (
       <div className="main-container">
@@ -354,29 +360,16 @@ class Container extends Component {
   }
 }
 
-
-
-/*
- *         {filteredEmails.map(email => {
-          return (
-            <div className='mail' key={email.id}>
-              <div className='from'>{email.user.name}</div>
-              <div className='subject'>{email.subject}</div>
-            </div>
-          )
-        })}
-
-import {friends, userLists, listNames, WIP, WTP, ATF} from './dummy';
-		
-*/
-
-const KEYS_TO_FILTERS = ['user.name', 'subject', 'dest.name', 'id']
+//Search feature
 const KEYS = ['name', 'title', 'description', 'year']
 
-const Search = React.createClass({
-  getInitialState () {
-    return { searchTerm: '' }
-  },
+class Search extends Component {
+  constructor() {
+    super();
+
+    this.state = { searchTerm: '' };
+    this.searchUpdated =this.searchUpdated.bind(this);
+  }
 
   componentDidMount() {
    const request = new Request("https://igdbcom-internet-game-database-v1.p.mashape.com/games/?fields=name&limit=50&offset=0&order=release_dates.date%3Adesc&search=", {
@@ -390,7 +383,7 @@ const Search = React.createClass({
         .then(json => this.setState({
           data: json
       }))
-  },
+  }
 
   searchAPI(query) {
    const request = new Request(`https://igdbcom-internet-game-database-v1.p.mashape.com/games/?fields=name&limit=50&offset=0&order=release_dates.date%3Adesc&search=${query}`, {
@@ -404,40 +397,59 @@ const Search = React.createClass({
         .then(json => this.setState({
           data: json
       }))
-  },
+  }
 
+  findGame(id) {
+    const request = new Request(`https://igdbcom-internet-game-database-v1.p.mashape.com/games/${id}?fields=name%2Crating%2Cfirst_release_date%2Csummary%2Cstoryline%2Ccover&limit=1&offset=0&order=release_dates.date%3Adesc`, {
+        headers: new Headers({
+          'X-Mashape-Key': 'EUQMsXMjGmmshSjK8dQ9W31H8UOtp1wKG3bjsnwgRTlndgTXjR'
+      })
+    });
 
+    fetch(request)
+      .then(response => response.json())
+      .then(json => this.setState({
+        data: json
+      }));
+  }
+
+  searchUpdated(term) {
+    this.setState({searchTerm: term});
+  }
+
+  selectResult(id) {
+    console.log(id);
+    const selectedResult = this.state.data.filter(function(game) {
+      return game.id === id;
+    });
+    this.findGame(id);
+  } //Needs to take id and search api again for single game then pass that data to Game component, then redirect to /game
 
   render() {
     console.log(this.state.data);
     if (this.state.data) {
       const results = this.state.data.filter(createFilter(this.state.searchTerm, KEYS));
       return(
-        <div>
+        <div className="search-bar">
           <SearchInput className='search-input' onChange={this.searchUpdated} />
-          <button onClick={()=>{this.searchAPI(this.state.searchTerm)}}>Go</button>
+          <button className="search-button" onClick={()=>{this.searchAPI(this.state.searchTerm)}}>Go</button>
+          <div className="search-results">
           {results.map(item => {
-            return ( <div key={item.id}>{item.name}</div> ) 
-            })    
+            return (
+              <p className="result-item" key={item.id} onClick={()=>{this.selectResult(item.id)}}>{item.name}</p> ) 
+            })   
           }
+          </div>
         </div>
       );
-  } else {
-      return (
-        <div>Loading...</div>
-      );
+      } else {
+          return (
+            <div>Loading...</div>
+          );
+    }
+
   }
-
-  },
-
-  searchUpdated (term) {
-    this.setState({searchTerm: term});
-   
-  }
-})
-
-//ReactDOM.render(<App />, document.getElementById('app'))
-
+}
 
 //Render Whole Thing in App
 class App extends Component {
@@ -446,9 +458,8 @@ class App extends Component {
       <Router>
         <div className="App">
           <Header />
-          <Container lists={listNames} friends={friends}/>
-	  <Search />
-	  
+          <Search />
+          <Container lists={listNames} friends={friends}/> 
         </div>
       </Router>
     );

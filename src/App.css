@@ -19,7 +19,6 @@
 }
 
 .container {
-  margin: 55px 0 0;
   height: 100%;
   position: relative;
   padding-bottom: 20px; /*height of footer*/
@@ -57,13 +56,11 @@ footer {
 }
 
 .profile-container {
-  margin-top: 55px;
   padding: 20px 10px 0;
   text-align: center;
 }
 
 .game-container {
-  margin-top: 75px;
   text-align: center;
 }
 
@@ -197,6 +194,38 @@ textarea {
   align-self: center;
 }
 
+.search-results {
+  background-color: #fff;
+  position: absolute;
+  top: 105px;
+  border: 1px solid #ccc;
+  border-top: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.search-bar {
+  margin-top: 55px;
+  padding: 15px 0;
+  text-align: center;
+}
+
+.search-button, .search-input {
+  display: inline-block;
+}
+
+.search-input {
+  margin-right: 10px;
+}
+
+.result-item {
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.result-item:hover {
+  background-color: lightblue;
+}
 
 
 
