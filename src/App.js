@@ -13,6 +13,16 @@ import Moment from 'react-moment';
 
 import SearchInput, {createFilter} from 'react-search-input'
 
+
+
+
+
+//redux - niko 
+
+import App2 from './components/App';
+
+
+
 //Stuff to do 
   //Fetch API is working for now but think it's only mapping a single game result in the Game component. The Lists will need to populate maybe by storing list info in DB then making an API call for all those items? Not sure...data structure needs to be worked out
   //Needs alternate Nav that switches on login
@@ -236,6 +246,11 @@ class MyLists extends Component {
         <h3>My Lists</h3>
         <ListButtonBar handler={this.changeList}/>
         <List list={this.state.list}/>
+
+	<App2 /> 
+
+
+
       </div>
     );
   }
