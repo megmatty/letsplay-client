@@ -1,7 +1,7 @@
 import React from 'react';
-// import UserList from '../containers/user-list';
-import {WIP, WTP, ATF} from './reducers/reducer-lists.js';
-// import UserDetails from '../containers/user-detail';
+import UserList from '../containers/user-list';
+import {WIP, WTP, ATF} from '../reducers/reducer-lists.js';
+import UserDetails from '../containers/user-detail';
 
 const App2 = () => (
     <div>

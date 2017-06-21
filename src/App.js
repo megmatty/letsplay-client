@@ -16,7 +16,6 @@ import SearchInput, {createFilter} from 'react-search-input'
 
 
 
-
 //redux - niko 
 
 import App2 from './components/App';
@@ -359,8 +358,6 @@ class Game extends Component {
 
 //Container for SPA Components by Route
 class Container extends Component {
-  
-
 
   render() {
     return (
