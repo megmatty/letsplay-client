@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {selectUser} from '../actions/index'
-
+import {selectUser} from '../actions/index';
+//COPY
 
 class UserList extends Component {
 
     renderList() {
-        return this.props.lists.map((list) => {
+        return this.props.users.map((user) => {
             return (
                 <li
-                    key={list.first}
-                    onClick={() => this.props.selectUser(list)}
+                    key={user.id}
+                    onClick={() => this.props.selectUser(user)}
                 >
-                    {list.listName}
+                    {user.first} {user.last}
                 </li>
             );
         });
@@ -33,7 +33,7 @@ class UserList extends Component {
 //      > whenever state changes, the UserList will automatically re-render
 function mapStateToProps(state) {
     return {
-        lists: state.users
+        users: state.users
     };
 }
 

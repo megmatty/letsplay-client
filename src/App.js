@@ -8,9 +8,9 @@ import {
 } from 'react-router-dom';
 import 'normalize.css';
 import './App.css';
-import {friends, userLists, listNames, WIP, WTP, ATF} from './dummy';
+import {friends, userLists, listNames} from './dummy';
 import Moment from 'react-moment';
-
+import {WIP, WTP, ATF} from './dummy.js';
 import SearchInput, {createFilter} from 'react-search-input'
 
 
