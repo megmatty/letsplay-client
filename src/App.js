@@ -12,13 +12,14 @@ import {friends, userLists, listNames} from './dummy';
 import Moment from 'react-moment';
 import {WIP, WTP, ATF} from './dummy.js';
 import SearchInput, {createFilter} from 'react-search-input'
-
+import UserList from './containers/user-list';
+import UserDetail from './containers/user-detail';
 
 
 
 //redux - niko 
 
-import App2 from './components/App';
+// import App2 from './components/App';
 
 
 
@@ -243,10 +244,10 @@ class MyLists extends Component {
       <div className="content-container">
         <User user="janedoe"/>
         <h3>My Lists</h3>
-        <ListButtonBar handler={this.changeList}/>
-        <List list={this.state.list}/>
+        <UserList />
+        <UserDetail />
 
-	<App2 /> 
+
 
 
 

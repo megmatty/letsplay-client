@@ -7,16 +7,18 @@ import {selectUser} from '../actions/index'
 class UserList extends Component {
 
     renderList() {
-        return this.props.lists.map((list) => {
-            return (
-                <li
-                    key={list.first}
-                    onClick={() => this.props.selectUser(list)}
-                >
-                    {list.listName}
-                </li>
-            );
-        });
+        return <div className="list-button-bar">
+            {this.props.lists.map((list) => {
+                return (
+                    <div className="list-button"
+                        key={list.first}
+                        onClick={() => this.props.selectUser(list)}
+                    >
+                        {list.listName}
+                    </div>
+                );
+            })}
+        </div>
     }
 
     render() {

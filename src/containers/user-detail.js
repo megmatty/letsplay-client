@@ -25,7 +25,7 @@ class UserDetail extends Component {
                             <img className="box-art" src={'//images.igdb.com/igdb/image/upload/t_cover_big/'+ game.cover.cloudinary_id + '.jpg'} alt='gamebox art' />
                             <p>Year: <Moment format="YYYY">{game.first_release_date}</Moment></p>
                             <p>Rating: {game.rating ? Math.floor(game.rating) + "/100" : "NR"}</p>
-                 </div>;
+                        </div>;
             })}
                 </div>
             );
