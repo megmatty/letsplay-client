@@ -119,7 +119,7 @@ class ProfileList extends Component {
         <Link to="/lists"><h3>My Lists</h3></Link>
         {this.props.listNames.map((list, i) => {
           return <div className="profile-list" key={i}>
-                    <Link to={`/lists/${list}`}>
+                    <Link to='/lists'>
                       <img className="arrow-icon" src="arrow.png" />
                     </Link>
                     <p className="list-name">{list}</p>
@@ -212,32 +212,6 @@ class ContactFriend extends Component {
 
 //My Lists View
 class MyLists extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      list: WIP,
-    };
-    this.changeList = this.changeList.bind(this);
-  }
-
-  changeList(list) {
-    console.log(list);
-    if (list === "All-Time Faves") {
-      this.setState({
-        list: ATF
-      });
-    } else if (list === "Want to Play") {
-      this.setState({
-        list: WTP
-      });
-    } else if (list === "What I'm Playing") {
-      this.setState({
-        list: WIP
-      });
-    };
-
-    console.log(this.state.list);
-  }
 
   render() {
     return (
@@ -246,11 +220,6 @@ class MyLists extends Component {
         <h3>My Lists</h3>
         <UserList />
         <UserDetail />
-
-
-
-
-
       </div>
     );
   }
@@ -263,9 +232,7 @@ class ListButtonBar extends Component {
     return (
       <div className="list-button-bar">
           {listNames.map((list, i) => {
-            return <div className="list-button" key={i} onClick={()=>{this.props.handler(list)}}>
-                    <Link to={`/lists/${list}`}>{list}</Link>
-                   </div>;
+            return <div className="list-button" key={i} onClick={()=>{this.props.handler(list)}}>{list}</div>;
           })}
       </div>
     );

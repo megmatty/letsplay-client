@@ -3,10 +3,12 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {selectUser} from '../actions/index'
 
-
+//this will replace the ListButtonBar Component
+    //rename first in data to shortListName
 class UserList extends Component {
 
     renderList() {
+        console.log(this);
         return <div className="list-button-bar">
             {this.props.lists.map((list) => {
                 return (
@@ -23,9 +25,9 @@ class UserList extends Component {
 
     render() {
         return (
-            <ul>
+            <div>
                 {this.renderList()}
-            </ul>
+            </div>
         );
     }
 

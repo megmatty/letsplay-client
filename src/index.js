@@ -15,7 +15,6 @@ import thunk from 'redux-thunk';
 import promise from 'redux-promise';
 import createLogger from 'redux-logger';
 import allReducers from './reducers';
-import App2 from './components/App';
 
 const logger = createLogger();
 const store = createStore(

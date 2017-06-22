@@ -10,15 +10,16 @@ import {
 import Moment from 'react-moment';
 /*
  * We need "if(!this.props.user)" because we set state to null by default
- * */
-
+ * *///
+ //this will replace the old List componenent
 class UserDetail extends Component {
     render() {
+        console.log(this);
         if (!this.props.lists) {
-            return (<div>Select a user...</div>);
+            return (<div>Select a list...</div>);
         }
             return (
-                <div>
+                <div className="list-container">
                     {this.props.lists.data.map((game, i) => {
                         return <div className="game-detail" key={i}>
                             <Link to="/game"><p>{game.name}</p></Link>
